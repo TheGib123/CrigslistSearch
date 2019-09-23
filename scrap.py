@@ -2,7 +2,9 @@ from selenium import webdriver
 import time
 
 # modify searchCity MAKE SURE STRING IS CORRECT
-searchCity = ["https://joplin.craigslist.org/search/sso?sort=rel&query=", 
+searchCity = ["https://joplin.craigslist.org/search/sso?sort=rel&query="]
+"""
+, 
 "https://springfield.craigslist.org/search/sso?sort=rel&query=",
 "https://kansascity.craigslist.org/search/sso?sort=rel&query=",
 "https://fayar.craigslist.org/search/sso?sort=rel&query=",
@@ -11,7 +13,7 @@ searchCity = ["https://joplin.craigslist.org/search/sso?sort=rel&query=",
 "https://stlouis.craigslist.org/search/sso?sort=rel&query=",
 "https://tulsa.craigslist.org/search/sso?sort=rel&query=",
 "https://oklahomacity.craigslist.org/search/sso?sort=rel&query="]
-
+"""
 
 
 
@@ -26,21 +28,13 @@ numListOfAds = ""				#show length of listofAdsNoDup
 # class for craigslist ad
 class AD:
 	def __init__(self, name, price, location, link, image):
-		self.name = name.text
-		self.price = price.text
-		self.link = link.get_attribute('href')
-		try:
-			self.location = location.text
-		except:
-			try:
-				self.location = location.text
-			except:
-				self.location = location
-		try:
-			self.image = image.get_attribute('src')
-		except:
-			self.image = image
-
+		self.name = name
+		self.price = price
+		self.link = link
+		self.location = location
+		self.image = image
+		
+		
 # prints ads in console
 def PrintAds():
 	for i in listOfAdsNoDup:
@@ -55,27 +49,46 @@ def PrintAds():
 def SearchPage(url):	
 	driver.get(url)
 	a = driver.find_elements_by_class_name("result-row");
-	for i in a:
-		name = i.find_element_by_class_name('result-title')
-		price = i.find_element_by_class_name('result-price')
-		link = i.find_element_by_tag_name('a')
+	for i in a:		
+		#rewrite 
+		name = ""
+		price = ""
+		link = ""
 		location = ""
 		image = ""
+		
 		try:
-			location = i.find_element_by_class_name('result-hood')
+			name = str(i.find_element_by_class_name('result-title').text)
 		except:
-			try:
-				location = i.find_element_by_class_name('nearby')
-			except:
-				location = "no location"
+			name = "no name"
+		try:
+			price = str(i.find_element_by_class_name('result-price').text)
+		except:
+			price = "no price"
+		try:
+			link = i.find_element_by_tag_name('a')
+			link = str(link.get_attribute('href'))
+		except:
+			link = "no link"
 		try:
 			image = i.find_element_by_tag_name('img')
+			image = str(image.get_attribute('src'))
 		except:
-			image = "no image"
+			image = "no image"			
+		try:
+			location = str(i.find_element_by_class_name('result-hood').text)
+		except:
+			try:
+				location = str(i.find_element_by_class_name('nearby').text)
+			except:
+				location = "no location"
+				
 		if (image != "no image"):
 			ad = AD(name, price, location, link, image)
-			listOfAds.append(ad)		
-	
+			listOfAds.append(ad)	
+				
+				
+		
 # sends url with search criteria
 def SearchItems(url):
 	for i in searchList:
@@ -141,6 +154,7 @@ def Main():
 	GetInput()
 	SearchCitys()
 	DeleteDuplicates()
+	PrintAds()
 	numListOfAds = str(len(listOfAdsNoDup))
 	print (numListOfAds + " ads found")
 	WriteHTML()
