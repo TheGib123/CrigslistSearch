@@ -80,6 +80,7 @@ def SearchPage(url):
 def SearchItems(url):
 	for i in searchList:
 		tempUrl = url.replace("query=", "query=" + i)
+		tempUrl = tempUrl.replace(" ", "+")
 		print(tempUrl)
 		SearchPage(tempUrl)
 		#time.sleep(1)
@@ -107,14 +108,17 @@ def WriteHTML():
 	f.write("<body style='text-align: center'>")
 	f.write("<h4>" + numListOfAds + " ads found</h4>")
 	for i in listOfAdsNoDup:
-		f.write("<div>")
-		f.write("<a href='" + i.link + "'>")
-		f.write("<img alt='' class='' src=" + i.image + ">")
-		f.write("</a>")
-		f.write("<p>" + i.name + "<br>")
-		f.write(i.price + "<br>")
-		f.write(i.location + "</p>")
-		f.write("</div>")
+		try:
+			f.write("<div>")
+			f.write("<a href='" + i.link + "'>")
+			f.write("<img alt='' class='' src=" + i.image + ">")
+			f.write("</a>")
+			f.write("<p>" + i.name + "<br>")
+			f.write(i.price + "<br>")
+			f.write(i.location + "</p>")
+			f.write("</div>")
+		except:
+			print ("1 ad failed")
 		
 	f.write("</body>")
 	f.write("</html>")
