@@ -2,9 +2,7 @@ from selenium import webdriver
 import time
 
 # modify searchCity MAKE SURE STRING IS CORRECT
-searchCity = ["https://joplin.craigslist.org/search/sso?sort=rel&query="]
-"""
-, 
+searchCity = ["https://joplin.craigslist.org/search/sso?sort=rel&query=", 
 "https://springfield.craigslist.org/search/sso?sort=rel&query=",
 "https://kansascity.craigslist.org/search/sso?sort=rel&query=",
 "https://fayar.craigslist.org/search/sso?sort=rel&query=",
@@ -13,7 +11,7 @@ searchCity = ["https://joplin.craigslist.org/search/sso?sort=rel&query="]
 "https://stlouis.craigslist.org/search/sso?sort=rel&query=",
 "https://tulsa.craigslist.org/search/sso?sort=rel&query=",
 "https://oklahomacity.craigslist.org/search/sso?sort=rel&query="]
-"""
+
 
 
 
@@ -92,11 +90,12 @@ def SearchPage(url):
 # sends url with search criteria
 def SearchItems(url):
 	for i in searchList:
-		tempUrl = url.replace("query=", "query=" + i)
-		tempUrl = tempUrl.replace(" ", "+")
-		print(tempUrl)
-		SearchPage(tempUrl)
-		#time.sleep(1)
+		if (i != '' and i != ' ' ):
+			tempUrl = url.replace("query=", "query=" + i)
+			tempUrl = tempUrl.replace(" ", "+")
+			print(tempUrl)
+			SearchPage(tempUrl)
+			#time.sleep(1)
 
 # sends each city url to SearchItems	
 def SearchCitys():
@@ -154,7 +153,7 @@ def Main():
 	GetInput()
 	SearchCitys()
 	DeleteDuplicates()
-	PrintAds()
+	#PrintAds()
 	numListOfAds = str(len(listOfAdsNoDup))
 	print (numListOfAds + " ads found")
 	WriteHTML()
